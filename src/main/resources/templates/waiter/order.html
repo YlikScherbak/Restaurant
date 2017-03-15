@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+
+<body>
+
+<div th:replace="fragments :: navbar"></div>
+
+
+<div class="container">
+    <h2 th:text="'Order№' + ${orderNumber} + '  Waiter:' + ${waiter}" style="display: inline"></h2>
+
+</div>
+<div class="container">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Sum</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="details : ${order.list}">
+            <td th:text="${details.prod_category}"></td>
+            <td th:text="${details.prod_name}"></td>
+            <td th:text="${details.count}"></td>
+            <td th:text="${details.sum}"></td>
+        </tr>
+        </tbody>
+        <tbody>
+        <tr>
+            <td colspan="3" align="right">Discount amount</td>
+            <td th:text="${order.discountAmount}"></td>
+        </tr>
+        <tr>
+            <td colspan="3" align="right">Total amount</td>
+            <td th:text="${order.totalAmount}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-form navbar-left">
+                    <a th:href="@{/waiter/order/__${orderNumber}__/menu}" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-cutlery"></i> Add product
+                    </a>
+                    <a th:href="@{/waiter/order/__${orderNumber}__/menu(compliment=true)}" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-gift"></i> Add compliment
+                    </a>
+                    <div class="btn-group dropup">
+                        <button type="button" class="btn btn-success dropdown-toggle " data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                            Set discount <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="link" th:each="discount : ${discounts}"
+                                   th:href="@{/waiter/order/__${orderNumber}__/setdiscount/__${discount.name}__}"
+                                   th:text="${discount.name} + ' ' + ${discount.percentage} + '%'"></a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a class="link" th:href="@{/waiter/order/__${orderNumber}__/discount/disable}"
+                                   style="color: red;">Disable discount</a></li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-danger dropp">
+                        <i class="glyphicon glyphicon-exclamation-sign"></i> Send error
+                    </button>
+                </div>
+                <div class="navbar-form navbar-right">
+                    <a th:href="@{/waiter/order/__${orderNumber}__/close}" class="btn btn-primary">
+                        <i class="glyphicon  glyphicon-off"></i> Close order
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal-shadow"></div>
+<div class="modal-window">
+    <div class="close">X</div>
+    <form method="post"  th:action="@{/waiter/error/__${orderNumber}__}" th:object="${error}" class="vote">
+        <div class="form-group" >
+            <label for="username">Message</label>
+            <input type="text" class="form-control" id="username" th:field="*{message}" name="username"/>
+        </div>
+        <button type="submit" class="btn btn-default link">Send message</button>
+    </form>
+</div>
+
+
+
+
+<script>
+$(function(){
+$('.dropp').click(function () {
+$('.modal-shadow').show();
+$('.modal-window').show();
+});
+
+$('.modal-shadow').click(function () {
+$('.modal-shadow').hide();
+$('.modal-window').hide();
+});
+
+$('.close').click(function () {
+$('.modal-shadow').hide();
+$('.modal-window').hide();
+});
+});
+
+$(function() {
+
+    $('.vote').on('submit', function() {
+
+        var method = $(this).attr('method');
+        var action = $(this).attr('action');
+        var vals = $(this).serialize();
+
+        $.ajax({
+            type: method,
+            url: action,
+            data: vals
+        });
+        return false;
+    });
+});
+</script>
+
+
+
+
+</body>
+</html>
+

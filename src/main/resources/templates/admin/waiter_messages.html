@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+<div class="container">
+    <table class="table  table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Order№</th>
+            <th>Waiter</th>
+            <th>Time</th>
+            <th>Message</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody th:each="error : ${errors}">
+        <tr>
+            <td th:text="${error.id}"></td>
+            <td th:text="${error.orderId}"></td>
+            <td th:text="${error.waiter}"></td>
+            <td th:text="${error.time}"></td>
+            <td th:text="${error.message}"></td>
+            <td><a class="btn btn-warning" th:href="@{/admin/errors/delete(id=${error.id})}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

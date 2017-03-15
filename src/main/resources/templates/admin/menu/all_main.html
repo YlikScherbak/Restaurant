@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Category name</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody th:each="main : ${mainCategory}">
+        <tr>
+            <td th:text="${main.category}"></td>
+            <td><a class="btn btn-success" th:href="@{/admin/menu/edit/main/__${main.id}__}">Edit</a></td>
+            <td><a class="btn btn-danger" th:href="@{/admin/menu/delete/main/__${main.id}__}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

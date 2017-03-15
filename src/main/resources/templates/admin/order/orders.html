@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Waiter</th>
+            <th>Is Active</th>
+            <th>Edit</th>
+            <th>Audition</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.username}"></td>
+            <td th:text="${order.active}"></td>
+            <td><a class="btn btn-success" th:href="@{/admin/orders/edit/__${order.id}__}">Edit</a></td>
+            <td><a class="btn btn-info" th:href="@{/admin/orders/audition/__${order.id}__}">Show</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="container" th:if="${pagination} ne null">
+    <div th:if="${pagination.isPagination() == true}" th:with="total=${pagination.getPagesCount()}">
+        <ul class="pagination pull-right">
+            <li><a th:if="${pagination.getPreviousPage()!=-1}"
+                   th:href="@{/admin/orders/all(page=${pagination.getPreviousPage()})}">&laquo;</a></li>
+            <li th:each="i : ${#numbers.sequence(1, total + 1)}"><a th:href="@{/admin/orders/all(page=${i})}"
+                                                                       th:text="${i}"></a></li>
+            <li><a th:if="${pagination.getNextPage()!=-1}"
+                   th:href="@{/admin/orders/all(page=${pagination.getNextPage()})}">&raquo;</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

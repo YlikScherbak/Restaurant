@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: navbar"></div>
+
+<div class="container">
+    <ul class="nav nav-pills">
+        <li th:each="floor : ${floors}">
+            <a th:href="@{'#' + ${floor.id}}" th:text="${floor.floorName}" data-toggle="tab"></a>
+        </li>
+    </ul>
+    <ul class="tab-content tab-content-menu">
+        <li class="tab-pane" th:each="floor : ${floors}" th:id="${floor.id}">
+            <tr th:each="table : ${floor.tables}">
+                <span th:switch="${table.occupied} ? ${true} : ${false}">
+                    <a th:case="${true}" th:href="@{'/waiter/order/' + ${table.orderId}}"
+                       th:class="${table.name == currentUser} ? 'btn btn-primary btn-lg btn-huge' : 'btn btn-danger disabled btn-lg btn-huge' ">Table№
+                        <span th:text="${table.number}"></span><br/>
+                        <span th:text="${table.name} ne null ? ${table.name} : ' '"></span>
+                    </a>
+                    <a th:case="${false}" th:href="@{/waiter/table/new(table=${table.number})}"
+                       class="btn btn-success btn-lg btn-huge">Table№
+                        <span th:text="${table.number}"></span>
+                    </a>
+                 </span>
+            </tr>
+        </li>
+    </ul>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+<h2 align="center">All waiters</h2>
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Enable</th>
+            <th>Edit</th>
+            <th>Disable/Enable</th>
+        </tr>
+        </thead>
+        <tbody th:each="user : ${users}">
+        <tr>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.enabled}"></td>
+            <td><a class="btn btn-danger" th:href="@{/admin/waiters/edit/__${user.id}__}">Edit</a></td>
+            <div th:switch="${user.enabled} ?  ${true} : ${false} ">
+                <td th:case="${true}"><a class="btn btn-warning" th:href="@{/admin/waiters/disable(id=${user.id})}">Disable</a>
+                </td>
+                <td th:case="${false}"><a class="btn btn-success" th:href="@{/admin/waiters/disable(id=${user.id})}">Enable</a>
+                </td>
+            </div>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>

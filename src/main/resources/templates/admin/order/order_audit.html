@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered table-condensed">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Product</th>
+            <th>Count</th>
+            <th>Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="order : ${audit}">
+            <td th:text="${order.category}"></td>
+            <td th:text="${order.prodName}"></td>
+            <td th:text="${order.count}"></td>
+            <td th:text="${order.date}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

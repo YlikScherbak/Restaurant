@@ -1,0 +1,34 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Category</th>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Sum</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="details : ${order.list}">
+            <td th:text="${details.prod_category}"></td>
+            <td th:text="${details.prod_name}"></td>
+            <td th:text="${details.count}"></td>
+            <td th:text="${details.sum}"></td>
+            <td><a class="btn btn-danger" th:href="@{/admin/orders/delete/__${id}__/__${details.prod_name}__}">Delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: navbar"></div>
+
+
+<div class="container">
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Order№</th>
+            <th>Table№</th>
+            <th>Creation time</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody th:each="order : ${orders}">
+        <tr>
+            <td th:text="${order.id}"></td>
+            <td th:text="${order.tableId}"></td>
+            <td th:text="${order.date}"></td>
+            <td><a class="btn btn-success" th:href="@{'/waiter/order/' + ${order.id}}">Select</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+</body>
+</html>

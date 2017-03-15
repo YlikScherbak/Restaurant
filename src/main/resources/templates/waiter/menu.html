@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: navbar"></div>
+
+
+<div class="container">
+    <ul class="nav nav-pills">
+        <li th:each="main : ${Mcategory}">
+            <a th:href="@{'#' + ${main.category}}" th:text="${main.category}" data-toggle="tab"></a>
+        </li>
+    </ul>
+    <ul class="tab-content">
+        <li th:each="main : ${Mcategory}" class="tab-pane" th:id="${main.category}">
+            <ul class="nav nav-pills">
+                <li th:each="subcategory : ${main.map}"><a data-toggle="tab" th:href="@{'#' + ${main.category} + '-' + ${subcategory.key}}" th:text="${subcategory.key}"></a>
+                </li>
+            </ul>
+                <ul class="tab-content tab-content-menu">
+                        <li class="tab-pane" th:each="subcat : ${main.map}" th:id="${main.category} + '-' + ${subcat.key}">
+                            <div class="container">
+                                <button class="btn btn-success btn-lg link" th:each="prod : ${subcat.value}" th:text="${prod}"
+                                        th:href="@{/waiter/order/__${order}__/menu(product=${prod},compliment=${compliment})}">
+                                </button>
+                            </div>
+                        </li>
+                </ul>
+        </li>
+    </ul>
+</div>
+
+
+<div class="container" >
+    <div class="row">
+        <div class="navbar navbar-inverse navbar-fixed-bottom">
+            <div class="container">
+                <div class="navbar-form navbar-left">
+                    <a th:href="@{/waiter/order/__${order}__}" class="btn btn-primary">
+                        <i class="glyphicon glyphicon-th-list"></i> Back to order
+                    </a>
+                </div>
+                <div class="navbar-form navbar-right">
+                    <a class="btn btn-primary" id="responce">
+                        <p></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.link').click(function (e) {
+            e.preventDefault();
+            var link = $(this).attr('href');
+            $.ajax({
+                url:link,
+                type:"post",
+                success:function (res) {
+                    $('#responce').first().text(res);
+                    setTimeout(function () {
+                        $('#responce').first().text('');
+                    },1356);
+                }
+            })
+        })
+
+    });
+</script>
+
+
+
+</body>
+</html>

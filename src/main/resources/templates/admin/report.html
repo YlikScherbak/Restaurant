@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+<body>
+
+<div th:replace="fragments :: adminnavbar"></div>
+
+<div class="container">
+
+    <h2 th:text="'Report №' + ${generalReport.id}" align="center"></h2>
+    <h3 th:text="'Total sum:' + ${generalReport.totalAmount}"></h3>
+    <h3 th:text="'Total discount sum:' + ${generalReport.discountAmount}"></h3>
+    <h2 align="center">Reports for each waitress</h2>
+
+    <table class="table table-striped table-hover table-bordered">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Total sum</th>
+            <th>Total discount sum</th>
+        </tr>
+        </thead>
+        <tbody th:each="report : ${waiterReport}">
+        <tr>
+            <td th:text="${report.waiter}"></td>
+            <td th:text="${report.totalAmount}"></td>
+            <td th:text="${report.discountAmount}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments :: head"></div>
+
+
+<body>
+<div th:replace="fragments :: navbar"></div>
+
+<div class="container">
+    <div class="row row-centered">
+        <div class="col-md-6 col-md-offset-3">
+            <button class="btn btn-danger dropp">
+                <i class="glyphicon glyphicon-print"></i> Print check
+            </button>
+            <h3 align="center" th:text="${order.creationDate} + ' - ' + ${closedDate}"></h3>
+            <h1 align="center" th:text="'Order№' + ${order.orderNumber}"></h1>
+            <p class="text-left" th:text="${order.floorName} + ', Table№' + ${order.tableNumber}"></p>
+            <p class="text-left" th:text="'Served by ' + ${waiter}"></p>
+            <table class="table table-condensed">
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Count</th>
+                    <th>Sum</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="detail : ${details}">
+                    <td th:text="${detail.prod_category} + ' ' + ${detail.prod_name}"></td>
+                    <td th:text="${detail.count}"></td>
+                    <td th:text="${detail.sum}"></td>
+                </tr>
+                </tbody>
+                <tbody>
+                <tr>
+                    <td colspan="2" align="right">Discount amount</td>
+                    <td th:text="${order.discountAmount}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" align="right">Total amount</td>
+                    <td th:text="${order.totalAmount}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <h2 align="center">Thank you for your visit!</h2>
+            <h2 align="center">We will be glad to see you again</h2>
+        </div>
+    </div>
+</div>
+
+<div class="modal-shadow"></div>
+<div class="modal-window" style="width: 499px; height: 354px;">
+    <div class="close">X</div>
+    <img th:src="@{/images/cat.jpg}" class="img-rounded" />
+</div>
+
+<script>
+    $(function(){
+        $('.dropp').click(function () {
+            $('.modal-shadow').show();
+            $('.modal-window').show();
+        });
+
+        $('.modal-shadow').click(function () {
+            $('.modal-shadow').hide();
+            $('.modal-window').hide();
+        });
+
+        $('.close').click(function () {
+            $('.modal-shadow').hide();
+            $('.modal-window').hide();
+        });
+    });
+</script>
+</body>
+</html>
