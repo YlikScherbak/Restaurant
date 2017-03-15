@@ -41,19 +41,19 @@ public class AdminMenuController {
     @RequestMapping(value = "/add_main", method = RequestMethod.GET)
     public String addToMenu(Model model) {
         model.addAttribute("menuCategory", new MenuCategory());
-        return "/admin/menu/add_main";
+        return "admin/menu/add_main";
     }
 
     @RequestMapping(value = "/add_main", method = RequestMethod.POST)
     public String addToMenuPost(@Valid MenuCategory menuCategory, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/admin/menu/add_main";
+            return "admin/menu/add_main";
         }
         try {
             menuCategoryService.addMainCategory(menuCategory);
         } catch (DAOException e) {
             model.addAttribute("error", e);
-            return "/admin/menu/add_main";
+            return "admin/menu/add_main";
         }
 
         return "redirect:/admin/menu/add_main";
@@ -64,7 +64,7 @@ public class AdminMenuController {
     public String addSubcategory(Model model) {
         model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
         model.addAttribute(new Subcategory());
-        return "/admin/menu/add_subcategory";
+        return "admin/menu/add_subcategory";
     }
 
     @RequestMapping(value = "/add_subcategory", method = RequestMethod.POST)
@@ -75,14 +75,14 @@ public class AdminMenuController {
                                      RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
-            return "/admin/menu/add_subcategory";
+            return "admin/menu/add_subcategory";
         }
         try {
             subCategoryService.addSubcategory(subcategory, mainCategory);
         } catch (DAOException e) {
             model.addAttribute("error", e);
             model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
-            return "/admin/menu/add_subcategory";
+            return "admin/menu/add_subcategory";
         }
         redirectAttributes.addFlashAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
 
@@ -94,7 +94,7 @@ public class AdminMenuController {
     public String addProduct(Model model) {
         model.addAttribute("product", new Product());
         model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-        return "/admin/menu/add_product";
+        return "admin/menu/add_product";
     }
 
     @RequestMapping(value = "/add_product", method = RequestMethod.POST)
@@ -104,14 +104,14 @@ public class AdminMenuController {
                                  RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-            return "/admin/menu/add_product";
+            return "admin/menu/add_product";
         }
         try {
             productService.addProduct(product, subcategory);
         } catch (DAOException e) {
             model.addAttribute("error", e);
             model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-            return "/admin/menu/add_product";
+            return "admin/menu/add_product";
         }
 
         redirectAttributes.addFlashAttribute("subcategory", subCategoryService.getAllSubcategory());
@@ -122,20 +122,20 @@ public class AdminMenuController {
     @RequestMapping(value = "/main_category", method = RequestMethod.GET)
     public String getAllMenuCategory(Model model) {
         model.addAttribute("mainCat", menuCategoryService.getAllMenuCategory());
-        return "/admin/menu/main_category";
+        return "admin/menu/main_category";
     }
 
     @RequestMapping(value = "/all_main", method = RequestMethod.GET)
     public String showAllMainCategory(Model model) {
         model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
-        return "/admin/menu/all_main";
+        return "admin/menu/all_main";
     }
 
     @RequestMapping(value = "/edit/main/{id}", method = RequestMethod.GET)
     public String editMainCategory(@PathVariable("id") Long id,
                                    Model model) {
         model.addAttribute("menuCategory", menuCategoryService.getById(id));
-        return "/admin/menu/edit_main";
+        return "admin/menu/edit_main";
     }
 
     @RequestMapping(value = "/edit/main/{id}", method = RequestMethod.POST)
@@ -144,13 +144,13 @@ public class AdminMenuController {
                                        Model model) {
         model.addAttribute("id", id);
         if (bindingResult.hasErrors()) {
-            return "/admin/menu/edit_main";
+            return "admin/menu/edit_main";
         }
         try {
             menuCategoryService.edit(menuCategory, id);
         } catch (DAOException e) {
             model.addAttribute("error", e);
-            return "/admin/menu/edit_main";
+            return "admin/menu/edit_main";
         }
 
         return "redirect:/admin/menu/all_main";
@@ -166,7 +166,7 @@ public class AdminMenuController {
     @RequestMapping(value = "/all_subcategory", method = RequestMethod.GET)
     public String showAllSubcategory(Model model) {
         model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-        return "/admin/menu/all_subcategory";
+        return "admin/menu/all_subcategory";
     }
 
     @RequestMapping(value = "/edit/subcategory/{id}", method = RequestMethod.GET)
@@ -174,7 +174,7 @@ public class AdminMenuController {
                                   Model model) {
         model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
         model.addAttribute("subcategory", subCategoryService.getById(id));
-        return "/admin/menu/edit_subcategory";
+        return "admin/menu/edit_subcategory";
     }
 
     @RequestMapping(value = "/edit/subcategory/{id}", method = RequestMethod.POST)
@@ -185,14 +185,14 @@ public class AdminMenuController {
         model.addAttribute("id", id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
-            return "/admin/menu/edit_subcategory";
+            return "admin/menu/edit_subcategory";
         }
         try {
             subCategoryService.edit(subcategory, id, mainCategory);
         } catch (DAOException e) {
             model.addAttribute("mainCategory", menuCategoryService.getAllMenuCategory());
             model.addAttribute("error", e);
-            return "/admin/menu/edit_subcategory";
+            return "admin/menu/edit_subcategory";
         }
 
         return "redirect:/admin/menu/all_subcategory";
@@ -208,7 +208,7 @@ public class AdminMenuController {
     @RequestMapping(value = "/all_product", method = RequestMethod.GET)
     public String showAllProduct(Model model) {
         model.addAttribute("productDTO", productService.getAllProduct());
-        return "/admin/menu/all_product";
+        return "admin/menu/all_product";
     }
 
     @RequestMapping(value = "/edit/product/{id}", method = RequestMethod.GET)
@@ -216,7 +216,7 @@ public class AdminMenuController {
                               Model model) {
         model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
         model.addAttribute("product", productService.getById(id));
-        return "/admin/menu/edit_product";
+        return "admin/menu/edit_product";
     }
 
     @RequestMapping(value = "/edit/product/{id}", method = RequestMethod.POST)
@@ -227,14 +227,14 @@ public class AdminMenuController {
         model.addAttribute("id", id);
         if (bindingResult.hasErrors()) {
             model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-            return "/admin/menu/edit_product";
+            return "admin/menu/edit_product";
         }
         try {
             productService.edit(product, id, subcategory);
         } catch (DAOException e) {
             model.addAttribute("error", e);
             model.addAttribute("subcategory", subCategoryService.getAllSubcategory());
-            return "/admin/menu/edit_product";
+            return "admin/menu/edit_product";
         }
 
         return "redirect:/admin/menu/all_product";
