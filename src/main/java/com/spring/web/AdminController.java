@@ -67,7 +67,7 @@ public class AdminController {
                              Model model) {
         model.addAttribute("id", id);
         model.addAttribute("waiter", userService.findWaiterById(id));
-        return "/admin/edit_waiter";
+        return "admin/edit_waiter";
     }
 
     @RequestMapping(value = "/waiters/edit/{id}", method = RequestMethod.POST)
@@ -92,13 +92,13 @@ public class AdminController {
     @RequestMapping(value = "/registry", method = RequestMethod.GET)
     public String registryGet(Model model) {
         model.addAttribute(new User());
-        return "/admin/waiter_registry";
+        return "admin/waiter_registry";
     }
 
     @RequestMapping(value = "/registry", method = RequestMethod.POST)
     public String registryPost(@Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "/admin/waiter_registry";
+            return "admin/waiter_registry";
         }
         try {
             userService.saveUser(user);
@@ -156,13 +156,13 @@ public class AdminController {
         list = workShiftService.getShifts((pagination.getCurrentPage() - 1) * ITEMS_PER_PAGE, pagination.getResultsPerPage());
         model.addAttribute("pagination", pagination);
         model.addAttribute("shifts", list);
-        return "/admin/shifts";
+        return "admin/shifts";
     }
 
     @RequestMapping(value = "/shifts/search", method = RequestMethod.POST)
     public String searchReport(@RequestParam Long id,  Model model){
         model.addAttribute("shifts", workShiftService.getWorkShift(id));
-        return "/admin/shifts";
+        return "admin/shifts";
     }
 
     //Отчёти
@@ -170,7 +170,7 @@ public class AdminController {
     public String showReport(Model model, @PathVariable("id") Long id) {
         model.addAttribute("generalReport", generalReportService.getGenReport(id));
         model.addAttribute("waiterReport", waiterReportService.getWaiterReports(id));
-        return "/admin/report";
+        return "admin/report";
     }
 
 
