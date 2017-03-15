@@ -77,7 +77,7 @@ public class WaitersController {
         model.addAttribute("closedDate", dateFormat.format(new Date()));
         model.addAttribute("waiter", user.getUsername());
         orderService.closeOrder(id);
-        return "/waiter/order_check";
+        return "waiter/order_check";
     }
 
     @RequestMapping(value = "/myorders", method = RequestMethod.GET)
