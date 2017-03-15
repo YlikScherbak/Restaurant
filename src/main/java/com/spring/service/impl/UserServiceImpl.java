@@ -23,15 +23,20 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService{
 
-    private final UserDAO userDAO;
+    private UserDAO userDAO;
 
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
+    public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @Override
     @Transactional

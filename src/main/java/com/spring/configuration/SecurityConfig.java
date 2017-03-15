@@ -16,10 +16,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private UserService userService;
 
-
+    @Autowired
     private CustomSuccessHandler customSuccessHandler;
 
     @Override
@@ -50,14 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setCustomSuccessHandler(CustomSuccessHandler customSuccessHandler) {
-        this.customSuccessHandler = customSuccessHandler;
     }
 }
