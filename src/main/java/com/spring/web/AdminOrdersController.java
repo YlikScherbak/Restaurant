@@ -44,7 +44,7 @@ public class AdminOrdersController {
         list = orderService.getOrders(active, (pagination.getCurrentPage() - 1) * ITEMS_PER_PAGE, pagination.getResultsPerPage());
         model.addAttribute("pagination", pagination);
         model.addAttribute("orders", list);
-        return "/admin/order/orders";
+        return "admin/order/orders";
     }
 
     @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -52,7 +52,7 @@ public class AdminOrdersController {
                             @PathVariable("id") Long id) {
         model.addAttribute("order", orderService.getOrder(id));
         model.addAttribute("id", id);
-        return "/admin/order/edit_order";
+        return "admin/order/edit_order";
     }
 
     @RequestMapping(value = "/delete/{id}/{product}", method = RequestMethod.GET)
@@ -67,12 +67,12 @@ public class AdminOrdersController {
     public String getAuditionInfo(Model model, @PathVariable("id") Long id) {
         model.addAttribute("audit", orderDetailService.getAudition(id));
 
-        return "/admin/order/order_audit";
+        return "admin/order/order_audit";
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.POST)
     public String searchOrder(@RequestParam Long id,  Model model){
         model.addAttribute("orders", orderService.searchOrder(id));
-        return "/admin/order/orders";
+        return "admin/order/orders";
     }
 }
