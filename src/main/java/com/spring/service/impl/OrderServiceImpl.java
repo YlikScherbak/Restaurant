@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         WorkShift workShift = workShiftDAO.getActiveWorkShift().get(0);
-        Order order = new Order(true, table, user, 0d, 0d);
+        Order order = new Order(true, table, user, BigDecimal.ZERO, BigDecimal.ZERO);
         order.setWorkShift(workShift);
         table.setOccupied(true);
         table.setUser(user);
