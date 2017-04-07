@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.math.BigDecimal;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
@@ -57,7 +58,7 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         if(order.getDiscount() != null){
-            order.setTotalAmount(order.getTotalAmount() + order.getDiscountAmount());
+            order.setTotalAmount(order.getTotalAmount().add(order.getDiscountAmount()));
         }
 
         order.setDiscount(discount);
@@ -77,8 +78,8 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         order.setDiscount(null);
-        order.setTotalAmount(order.getTotalAmount() + order.getDiscountAmount());
-        order.setDiscountAmount(0d);
+        order.setTotalAmount(order.getTotalAmount().add(order.getDiscountAmount()));
+        order.setDiscountAmount(BigDecimal.ZERO);
 
     }
 }
