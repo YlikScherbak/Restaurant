@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.envers.Audited;
 
+import java.math.BigDecimal;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class OrderDetail implements Serializable {
     private int count;
 
     @Column(name = "price")
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -32,7 +33,7 @@ public class OrderDetail implements Serializable {
     public OrderDetail() {
     }
 
-    public OrderDetail(OrderDetailsId id, String category, short count, Double price) {
+    public OrderDetail(OrderDetailsId id, String category, short count, BigDecimal price) {
         this.id = id;
         this.category = category;
         this.count = count;
@@ -56,11 +57,11 @@ public class OrderDetail implements Serializable {
     }
 
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
