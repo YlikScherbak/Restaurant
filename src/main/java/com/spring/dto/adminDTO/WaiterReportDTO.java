@@ -1,17 +1,19 @@
 package com.spring.dto.adminDTO;
 
+import java.math.BigDecimal;
+
 public class WaiterReportDTO {
 
     private String waiter;
 
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     public WaiterReportDTO() {
     }
 
-    public WaiterReportDTO(String waiter, Double totalAmount, Double discountAmount) {
+    public WaiterReportDTO(String waiter, BigDecimal totalAmount, BigDecimal discountAmount) {
         this.waiter = waiter;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
@@ -25,19 +27,19 @@ public class WaiterReportDTO {
         this.waiter = waiter;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Double getDiscountAmount() {
+    public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
+    public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
 }
