@@ -1,5 +1,6 @@
 package com.spring.dto.waitresDTO;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class CheckDTO {
@@ -12,14 +13,14 @@ public class CheckDTO {
 
     private Date creationDate;
 
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     public CheckDTO() {
     }
 
-    public CheckDTO(Long orderNumber, String floorName, Integer tableNumber, Date creationDate, Double totalAmount, Double discountAmount) {
+    public CheckDTO(Long orderNumber, String floorName, Integer tableNumber, Date creationDate, BigDecimal totalAmount, BigDecimal discountAmount) {
         this.orderNumber = orderNumber;
         this.floorName = floorName;
         this.tableNumber = tableNumber;
@@ -60,19 +61,19 @@ public class CheckDTO {
         this.creationDate = creationDate;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Double getDiscountAmount() {
+    public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
+    public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
 }
