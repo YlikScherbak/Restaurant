@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,9 +64,9 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setId(orderDetailsId);
             if (compliment.equals("true")) {
-                orderDetail.setPrice(0D);
+                orderDetail.setPrice(BigDecimal.ZERO);
             } else {
-                orderDetail.setPrice(product.getPrice());
+                orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
             }
 
             orderDetail.setCount(1);
@@ -74,7 +75,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             order.getOrderDetails().add(orderDetail);
 
             if (order.getDiscount() == null) {
-                order.setTotalAmount(order.getTotalAmount() + orderDetail.getPrice());
+                order.setTotalAmount(order.getTotalAmount().add(orderDetail.getPrice()));
             } else {
                 order.setAmountWithDiscount(orderDetail.getPrice());
             }
@@ -83,7 +84,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         } else {
             od.setCount(od.getCount() + 1);
             if (order.getDiscount() == null) {
-                order.setTotalAmount(order.getTotalAmount() + od.getPrice());
+                order.setTotalAmount(order.getTotalAmount().add(od.getPrice()));
             } else {
                 order.setAmountWithDiscount(od.getPrice());
             }
@@ -109,7 +110,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         }
 
         if (order.getDiscount() == null) {
-            order.setTotalAmount(order.getTotalAmount() - orderDetail.getPrice());
+            order.setTotalAmount(order.getTotalAmount().subtract(orderDetail.getPrice()));
         } else {
             order.setAmountOnDelete(orderDetail.getPrice());
         }

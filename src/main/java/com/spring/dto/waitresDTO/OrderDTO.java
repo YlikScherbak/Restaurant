@@ -2,13 +2,14 @@ package com.spring.dto.waitresDTO;
 
 import com.spring.model.Order;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OrderDTO {
 
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     private List<OrderDetalisDTO> list;
 
@@ -21,19 +22,19 @@ public class OrderDTO {
         this.list = list;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Double getDiscountAmount() {
+    public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
+    public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
 

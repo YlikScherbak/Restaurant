@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         if(order.getDiscount() != null){
-            order.setTotalAmount(order.getTotalAmount() + order.getDiscountAmount());
+            order.setTotalAmount(order.getTotalAmount().add(order.getDiscountAmount()));
         }
 
         order.setDiscount(discount);
@@ -77,8 +78,8 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         order.setDiscount(null);
-        order.setTotalAmount(order.getTotalAmount() + order.getDiscountAmount());
-        order.setDiscountAmount(0d);
+        order.setTotalAmount(order.getTotalAmount().add(order.getDiscountAmount()));
+        order.setDiscountAmount(BigDecimal.ZERO);
 
     }
 }

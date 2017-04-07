@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,10 +25,10 @@ public class Order implements Serializable {
 
     @Basic
     @Column(name = "total_amount", precision = 10, scale = 2)
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     @Column(name = "discount_amount", precision = 10, scale = 2)
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     @OneToMany(mappedBy = "id.order")
     private List<OrderDetail> orderDetails = new ArrayList<>();
@@ -58,7 +59,7 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(boolean active, Table table, User user, Double totalAmount, Double discountAmount) {
+    public Order(boolean active, Table table, User user, BigDecimal totalAmount, BigDecimal discountAmount) {
         this.active = active;
         this.table = table;
         this.user = user;
@@ -122,19 +123,19 @@ public class Order implements Serializable {
         this.discount = discount;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Double getDiscountAmount() {
+    public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
+    public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
 
@@ -183,19 +184,26 @@ public class Order implements Serializable {
     }
 
     public void recount() {
-        Double discount = getTotalAmount() * (getDiscount().getDiscountPercentage() / 100);
-        setDiscountAmount(discount);
-        setTotalAmount(getTotalAmount() - discount);
+        BigDecimal discount = getTotalAmount().multiply(BigDecimal.valueOf(getDiscount().getDiscountPercentage()).
+                divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP));
+        setDiscountAmount(discount.setScale(2, BigDecimal.ROUND_HALF_UP));
+        setTotalAmount(getTotalAmount().subtract(discount).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    public void setAmountWithDiscount(Double price) {
-        setDiscountAmount(getDiscountAmount() + (price * (getDiscount().getDiscountPercentage() / 100)));
-        setTotalAmount(getTotalAmount() + (price - (price * (getDiscount().getDiscountPercentage() / 100))));
+    public void setAmountWithDiscount(BigDecimal price) {
+        setDiscountAmount((getDiscountAmount().
+                add(price.multiply(BigDecimal.valueOf(getDiscount().getDiscountPercentage()).
+                        divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP)))).setScale(2, BigDecimal.ROUND_HALF_UP));
+        setTotalAmount((getTotalAmount().add(price.subtract(price.multiply
+                (BigDecimal.valueOf(getDiscount().getDiscountPercentage()).
+                        divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))))).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
-    public void setAmountOnDelete(Double price) {
-        setDiscountAmount(getDiscountAmount() - (price * (getDiscount().getDiscountPercentage() / 100)));
-        setTotalAmount(getTotalAmount() - (price - (price * (getDiscount().getDiscountPercentage() / 100))));
+    public void setAmountOnDelete(BigDecimal price) {
+        setDiscountAmount((getDiscountAmount().subtract(price.multiply(BigDecimal.valueOf(getDiscount().getDiscountPercentage()).
+                divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP)))).setScale(2, BigDecimal.ROUND_HALF_UP));
+        setTotalAmount((getTotalAmount().subtract(price.subtract(price.multiply(BigDecimal.valueOf(getDiscount().getDiscountPercentage()).
+                divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))))).setScale(2, BigDecimal.ROUND_HALF_UP));
     }
 
 }
