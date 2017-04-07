@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Entity
 @javax.persistence.Table(name = "waiter_report")
@@ -18,10 +19,10 @@ public class WaiterReport implements Serializable {
     private String waiter;
 
     @Column(name = "total_amount", nullable = false, updatable = false)
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     @Column(name = "discount_amount", nullable = false, updatable = false)
-    private Double discountAmount;
+    private BigDecimal discountAmount;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "general_report_id")
@@ -30,7 +31,7 @@ public class WaiterReport implements Serializable {
     public WaiterReport() {
     }
 
-    public WaiterReport(String waiter, Double totalAmount, Double discountAmount, GeneralReport generalReport) {
+    public WaiterReport(String waiter, BigDecimal totalAmount, BigDecimal discountAmount, GeneralReport generalReport) {
         this.waiter = waiter;
         this.totalAmount = totalAmount;
         this.discountAmount = discountAmount;
@@ -53,19 +54,19 @@ public class WaiterReport implements Serializable {
         this.waiter = waiter;
     }
 
-    public Double getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Double totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 
-    public Double getDiscountAmount() {
+    public BigDecimal getDiscountAmount() {
         return discountAmount;
     }
 
-    public void setDiscountAmount(Double discountAmount) {
+    public void setDiscountAmount(BigDecimal discountAmount) {
         this.discountAmount = discountAmount;
     }
 
