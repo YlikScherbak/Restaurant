@@ -1,5 +1,7 @@
 package com.spring.dto.waitresDTO;
 
+import java.math.BigDecimal;
+
 public class OrderDetalisDTO {
 
     private String prod_name;
@@ -8,12 +10,12 @@ public class OrderDetalisDTO {
 
     private int count;
 
-    private Double sum;
+    private BigDecimal sum;
 
     public OrderDetalisDTO() {
     }
 
-    public OrderDetalisDTO(String prod_name, String prod_category, int count, Double sum) {
+    public OrderDetalisDTO(String prod_name, String prod_category, int count, BigDecimal sum) {
         this.prod_name = prod_name;
         this.prod_category = prod_category;
         this.count = count;
@@ -44,11 +46,11 @@ public class OrderDetalisDTO {
         this.count = count;
     }
 
-    public Double getSum() {
+    public BigDecimal getSum() {
         return sum;
     }
 
-    public void setSum(Double sum) {
+    public void setSum(BigDecimal sum) {
         this.sum = sum;
     }
 
