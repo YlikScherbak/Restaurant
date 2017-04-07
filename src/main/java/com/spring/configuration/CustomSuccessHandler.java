@@ -53,11 +53,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         }
 
         if (isAdmin(roles)) {
-            url = "/admin/main";
+            url = "admin/main";
         } else if (isUser(roles) && !workShiftDAO.getActiveWorkShift().isEmpty()) {
-            url = "/waiter/tables";
+            url = "waiter/tables";
         } else {
-            url = "/accessDenied";
+            url = "accessDenied";
         }
 
         return url;
