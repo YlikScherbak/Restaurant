@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +44,8 @@ public class GeneralReportServiceImpl implements GeneralReportService {
                 reduce((o1, o2) -> o1 + o2).orElse(0D));
         generalReport.setWorkShift(workShiftDAO.findReferenceById(id));
         List<WaiterReport> waiterReports = new ArrayList<>();
-        list.forEach(objects -> waiterReports.add(new WaiterReport((String) objects[0], (Double) objects[1],
-                (Double) objects[2], generalReport)));
+        list.forEach(objects -> waiterReports.add(new WaiterReport((String) objects[0],  (BigDecimal) objects[1],
+                (BigDecimal) objects[2], generalReport)));
         generalReport.setWaiterReports(waiterReports);
         generalReportDAO.save(generalReport);
         return generalReport.getId();

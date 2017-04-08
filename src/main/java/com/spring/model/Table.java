@@ -2,6 +2,8 @@ package com.spring.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,6 +24,7 @@ public class Table implements Serializable {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", unique = true)
+    @LazyToOne(value = LazyToOneOption.NO_PROXY)
     private Order order;
 
     @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)

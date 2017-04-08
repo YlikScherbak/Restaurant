@@ -3,7 +3,9 @@ package com.spring.service.impl;
 import com.spring.dao.MenuCategoryDAO;
 import com.spring.exception.DAOException;
 import com.spring.model.MenuCategory;
+import com.spring.model.Subcategory;
 import com.spring.service.MenuCategoryService;
+import com.spring.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +17,12 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
 
     private final MenuCategoryDAO menuCategoryDAO;
 
+    private final SubCategoryService subCategoryService;
+
     @Autowired
-    public MenuCategoryServiceImpl(MenuCategoryDAO menuCategoryDAO) {
+    public MenuCategoryServiceImpl(MenuCategoryDAO menuCategoryDAO, SubCategoryService subCategoryService) {
         this.menuCategoryDAO = menuCategoryDAO;
+        this.subCategoryService = subCategoryService;
     }
 
     @Override
@@ -51,7 +56,7 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
         MenuCategory oldCategory = menuCategoryDAO.findById(id);
         if (oldCategory == null) {
             throw new DAOException("Such main category does not exist");
-        }else if (!menuCategoryDAO.findByCategory(menuCategory.getCategory()).isEmpty()){
+        } else if (!menuCategoryDAO.findByCategory(menuCategory.getCategory()).isEmpty()) {
             throw new DAOException("Duplicate main category name");
         }
         oldCategory.setCategory(menuCategory.getCategory());
@@ -61,9 +66,13 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
     @Transactional
     public void delete(Long id) {
         MenuCategory menuCategory = menuCategoryDAO.findById(id);
-        if(menuCategory == null){
+
+        if (menuCategory == null) {
             throw new DAOException("Such category does not exist");
         }
+
+        List<Subcategory> subcategories = menuCategory.getSubcategories();
+        subcategories.forEach(subcategory -> subCategoryService.delete(subcategory.getId()));
         menuCategoryDAO.remove(menuCategory);
     }
 }

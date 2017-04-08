@@ -21,7 +21,7 @@ public class MenuCategory implements Serializable {
     @Column(name = "category")
     private String category;
 
-    @OneToMany(mappedBy = "menuCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "menuCategory", cascade = CascadeType.ALL)
     private List<Subcategory> subcategories = new ArrayList<>();
 
     public MenuCategory(String category) {

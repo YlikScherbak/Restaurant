@@ -61,34 +61,24 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail od = orderDetailsDAO.findById(orderDetailsId);
 
         if (od == null) {
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setId(orderDetailsId);
+            od = new OrderDetail(orderDetailsId ,product.getSubcategory().getSubcategory(), (short)1 );
             if (compliment.equals("true")) {
-                orderDetail.setPrice(BigDecimal.ZERO);
+                od.setPrice(BigDecimal.ZERO);
             } else {
-                orderDetail.setPrice(BigDecimal.valueOf(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
+                od.setPrice(BigDecimal.valueOf(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
             }
-
-            orderDetail.setCount(1);
-            orderDetail.setCategory(product.getSubcategory().getSubcategory());
-            orderDetailsDAO.save(orderDetail);
-            order.getOrderDetails().add(orderDetail);
-
-            if (order.getDiscount() == null) {
-                order.setTotalAmount(order.getTotalAmount().add(orderDetail.getPrice()));
-            } else {
-                order.setAmountWithDiscount(orderDetail.getPrice());
-            }
-
-            return orderDetail.getId().getProdName();
+            orderDetailsDAO.save(od);
+            order.getOrderDetails().add(od);
         } else {
             od.setCount(od.getCount() + 1);
-            if (order.getDiscount() == null) {
-                order.setTotalAmount(order.getTotalAmount().add(od.getPrice()));
-            } else {
-                order.setAmountWithDiscount(od.getPrice());
-            }
         }
+
+        if (order.getDiscount() == null) {
+            order.setTotalAmount(order.getTotalAmount().add(od.getPrice()));
+        } else {
+            order.setAmountWithDiscount(od.getPrice());
+        }
+
         return od.getId().getProdName();
     }
 

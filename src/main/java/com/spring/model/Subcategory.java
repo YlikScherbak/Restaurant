@@ -21,7 +21,7 @@ public class Subcategory implements Serializable {
     @Column(name = "subcategory")
     private String subcategory;
 
-    @OneToMany(mappedBy = "subcategory" , orphanRemoval = true)
+    @OneToMany(mappedBy = "subcategory")
     private List<Product> products = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

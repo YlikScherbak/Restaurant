@@ -1,8 +1,10 @@
 package com.spring.service.impl;
 
 import com.spring.dao.MenuCategoryDAO;
+import com.spring.dao.ProductDAO;
 import com.spring.dao.SubcategoryDAO;
 import com.spring.exception.DAOException;
+import com.spring.model.Product;
 import com.spring.model.Subcategory;
 import com.spring.service.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,13 @@ public class SubCategoryServiceImpl implements SubCategoryService {
 
     private final MenuCategoryDAO menuCategoryDAO;
 
+    private final ProductDAO productDAO;
+
     @Autowired
-    public SubCategoryServiceImpl(SubcategoryDAO subcategoryDAO, MenuCategoryDAO menuCategoryDAO) {
+    public SubCategoryServiceImpl(SubcategoryDAO subcategoryDAO, MenuCategoryDAO menuCategoryDAO, ProductDAO productDAO) {
         this.subcategoryDAO = subcategoryDAO;
         this.menuCategoryDAO = menuCategoryDAO;
+        this.productDAO = productDAO;
     }
 
     @Override
@@ -71,6 +76,8 @@ public class SubCategoryServiceImpl implements SubCategoryService {
         if (subcategory == null) {
             throw new DAOException("Such subcategory does not exist");
         }
+        List<Product> products = subcategory.getProducts();
+        products.forEach(productDAO::remove);
         subcategoryDAO.remove(subcategory);
     }
 }
