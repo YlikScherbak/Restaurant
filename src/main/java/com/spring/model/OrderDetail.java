@@ -33,7 +33,7 @@ public class OrderDetail implements Serializable {
     public OrderDetail() {
     }
 
-    public OrderDetail(OrderDetailsId id, String category, short count) {
+    public OrderDetail(OrderDetailsId id, String category, int count) {
         this.id = id;
         this.category = category;
         this.count = count;

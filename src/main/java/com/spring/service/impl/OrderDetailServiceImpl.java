@@ -61,7 +61,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetail od = orderDetailsDAO.findById(orderDetailsId);
 
         if (od == null) {
-            od = new OrderDetail(orderDetailsId ,product.getSubcategory().getSubcategory(), (short)1 );
+            od = new OrderDetail(orderDetailsId ,product.getSubcategory().getSubcategory(), 1 );
             if (compliment.equals("true")) {
                 od.setPrice(BigDecimal.ZERO);
             } else {
