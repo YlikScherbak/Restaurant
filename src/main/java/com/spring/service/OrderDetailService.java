@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface OrderDetailService {
 
-    String addOrderDetail(long id, String product, String compliment);
+    String addOrderDetail(long id, String product, Boolean compliment);
 
     void deleteOrderDetail(Long id, String prodName);
 

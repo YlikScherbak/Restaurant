@@ -37,13 +37,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     @Transactional
-    public String addOrderDetail(long id, String productName, String compliment) {
+    public String addOrderDetail(long id, String productName, Boolean compliment) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Order order = orderDAO.findById(id);
-        Product product;
-        try {
-            product = productDAO.findProductByName(productName).get(0);
-        } catch (NullPointerException e) {
+        Product product = productDAO.findProductByName(productName).get(0);
+
+        if (product == null) {
             throw new DAOException("Such product does not exist");
         }
 
@@ -51,22 +50,14 @@ public class OrderDetailServiceImpl implements OrderDetailService {
             throw new InsufficientPermissionsException("You can not control others order");
         }
 
-        OrderDetailsId orderDetailsId;
-        if (compliment.equals("true")) {
-            orderDetailsId = new OrderDetailsId(product.getProdName() + " (compliment)", order);
-        } else {
-            orderDetailsId = new OrderDetailsId(product.getProdName(), order);
-        }
+        OrderDetailsId orderDetailsId = new OrderDetailsId
+                ((compliment) ? product.getProdName() + " (compliment)" : product.getProdName(), order);
 
         OrderDetail od = orderDetailsDAO.findById(orderDetailsId);
 
         if (od == null) {
-            od = new OrderDetail(orderDetailsId ,product.getSubcategory().getSubcategory(), 1 );
-            if (compliment.equals("true")) {
-                od.setPrice(BigDecimal.ZERO);
-            } else {
-                od.setPrice(BigDecimal.valueOf(product.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP));
-            }
+            od = new OrderDetail(orderDetailsId, product.getSubcategory().getSubcategory(), 1);
+            od.setPrice((compliment) ? BigDecimal.ZERO : BigDecimal.valueOf(product.getPrice()));
             orderDetailsDAO.save(od);
             order.getOrderDetails().add(od);
         } else {

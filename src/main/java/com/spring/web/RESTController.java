@@ -23,7 +23,7 @@ public class RESTController {
     @RequestMapping(value = "waiter/order/{id}/menu", method = RequestMethod.POST)
     public String addToOrder(@PathVariable("id") long id,
                              @RequestParam("product") String product,
-                             @RequestParam(value = "compliment", defaultValue = "") String compliment) {
+                             @RequestParam(value = "compliment", defaultValue = "false") Boolean compliment) {
         String prodName = orderDetailService.addOrderDetail(id, product, compliment);
         return prodName + " successfully added to order ";
     }
