@@ -40,13 +40,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public String addOrderDetail(long id, String productName, Boolean compliment) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Order order = orderDAO.findById(id);
-        Product product = productDAO.findProductByName(productName).get(0);
+        Product product = productDAO.findProductByName(productName).
+                orElseThrow(() -> new DAOException("Such product does not exist"));
 
-        if (product == null) {
-            throw new DAOException("Such product does not exist");
-        }
-
-        if (!order.getUser().getUsername().equals(user.getUsername())) {
+        if (!order.getUser().equals(user)) {
             throw new InsufficientPermissionsException("You can not control others order");
         }
 

@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductDAOImpl extends MyDAOImpl<Product, Long> implements ProductDAO {
@@ -18,12 +18,12 @@ public class ProductDAOImpl extends MyDAOImpl<Product, Long> implements ProductD
     }
 
     @Override
-    public List<Product> findProductByName(String name) {
+    public Optional<Product> findProductByName(String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Product> criteria = cb.createQuery(Product.class);
         Root<Product> product = criteria.from(Product.class);
         criteria.select(product).where(cb.equal(product.get("prodName"), name));
         TypedQuery<Product> query = em.createQuery(criteria);
-        return query.getResultList();
+        return Optional.of(query.getSingleResult());
     }
 }
