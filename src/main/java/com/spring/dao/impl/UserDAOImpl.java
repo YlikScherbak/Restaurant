@@ -11,6 +11,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserDAOImpl extends MyDAOImpl<User, Long> implements UserDAO {
@@ -20,13 +21,13 @@ public class UserDAOImpl extends MyDAOImpl<User, Long> implements UserDAO {
     }
 
     @Override
-    public User findUserByName(String name) {
+    public Optional<User> findUserByName(String name) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<User> criteria = cb.createQuery(User.class);
         Root<User> user = criteria.from(User.class);
         criteria.select(user).where(cb.equal(user.get("username"), name));
         TypedQuery<User> query = em.createQuery(criteria);
-        return query.getSingleResult();
+        return Optional.of(query.getSingleResult());
     }
 
     @Override

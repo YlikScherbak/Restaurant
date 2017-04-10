@@ -49,6 +49,6 @@ public class ErrorServiceImpl implements ErrorService {
     @Override
     @Transactional(readOnly = true)
     public Long checkActiveErrors() {
-        return errorDAO.getCount();
+        return errorDAO.getCount().orElse(0L);
     }
 }

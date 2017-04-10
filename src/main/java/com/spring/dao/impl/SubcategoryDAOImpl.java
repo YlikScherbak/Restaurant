@@ -8,7 +8,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class SubcategoryDAOImpl extends MyDAOImpl<Subcategory, Long> implements SubcategoryDAO {
@@ -18,12 +18,12 @@ public class SubcategoryDAOImpl extends MyDAOImpl<Subcategory, Long> implements 
     }
 
     @Override
-    public List<Subcategory> findBySubcategory(String subcategory) {
+    public Optional<Subcategory> findBySubcategory(String subcategory) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Subcategory> criteria = cb.createQuery(Subcategory.class);
         Root<Subcategory> subCategory = criteria.from(Subcategory.class);
         criteria.select(subCategory).where(cb.equal(subCategory.get("subcategory"), subcategory));
         TypedQuery<Subcategory> query = em.createQuery(criteria);
-        return query.getResultList();
+        return Optional.of(query.getSingleResult());
     }
 }

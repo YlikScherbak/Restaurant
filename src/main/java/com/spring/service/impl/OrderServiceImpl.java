@@ -52,14 +52,14 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public long createOrder(int number) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Table table = tableDAO.findById(number);
-        if (table == null) {
-            throw new DAOException("Table not found");
-        } else if (table.getUser() != null) {
+        Table table = tableDAO.findById(number).
+                orElseThrow(() -> new DAOException("Table not found"));
+
+        if (table.getUser() != null) {
             throw new InsufficientPermissionsException("You can not create a new order, as the table is already in use");
         }
 
-        WorkShift workShift = workShiftDAO.getActiveWorkShift().get(0);
+        WorkShift workShift = workShiftDAO.getActiveWorkShift().orElseThrow(() -> new DAOException("Work shift is not open"));
         Order order = new Order(true, table, user, BigDecimal.ZERO, BigDecimal.ZERO);
         order.setWorkShift(workShift);
         table.setOccupied(true);
@@ -74,14 +74,9 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO getOrder(long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<OrderDetalisDTO> list = new ArrayList<>();
-        Order order = orderDAO.findById(id);
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Order not found"));
 
-        if (order == null) {
-            throw new DAOException("Order not found");
-        }
-
-        if (!order.getUser().getUsername().equals(user.getUsername()) ^
-                user.getUserAuthorities() == Role.ROLE_ADMIN) {
+        if (!order.getUser().equals(user) ^ user.getUserAuthorities() == Role.ROLE_ADMIN) {
             throw new InsufficientPermissionsException("This order is served by another waiter");
         }
 
@@ -104,10 +99,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void closeOrder(long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Order order = orderDAO.findById(id);
-        if (order == null) {
-            throw new DAOException("Such an order does not exist");
-        } else if (!order.getUser().getUsername().equals(user.getUsername())) {
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such an order does not exist"));
+
+        if (!order.getUser().getUsername().equals(user.getUsername())) {
             throw new InsufficientPermissionsException("You can not close the foreign order");
         }
         order.setActive(false);
@@ -120,7 +114,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public Long count() {
-        return orderDAO.getCount();
+        return orderDAO.getCount().orElse(0L);
     }
 
     @Override
@@ -144,10 +138,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersDTO searchOrder(Long id) {
-        Order order = orderDAO.findById(id);
-        if (order == null){
-            throw new DAOException("Such an order does not exist");
-        }
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such an order does not exist"));
+
         return new OrdersDTO(order);
     }
 }

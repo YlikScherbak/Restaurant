@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void addProduct(Product product, Long subcategory) {
-        if(!productDAO.findProductByName(product.getProdName()).isEmpty()){
+        if (productDAO.findProductByName(product.getProdName()).isPresent()) {
             throw new DAOException("Duplicate product name");
         }
 
@@ -49,22 +49,16 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Product getById(Long id) {
-        Product product = productDAO.findById(id);
-        if (product == null){
-            throw new DAOException("Such product does not exist");
-        }
-
-        return product;
+        return productDAO.findById(id).orElseThrow(() -> new DAOException("Such product does not exist"));
     }
 
     @Override
     @Transactional
     public void edit(Product product, Long id, Long subcategory) {
-        Product oldProd = productDAO.findById(id);
-        if (oldProd == null){
-            throw new DAOException("Such product does not exist");
-        }else if (!productDAO.findProductByName(product.getProdName()).isEmpty()
-                && (!oldProd.getProdName().equals(product.getProdName()))){
+        Product oldProd = productDAO.findById(id).orElseThrow(() -> new DAOException("Such product does not exist"));
+
+        if (productDAO.findProductByName(product.getProdName()).isPresent()
+                && (!oldProd.getProdName().equals(product.getProdName()))) {
             throw new DAOException("Duplicate product name");
         }
         oldProd.setProdName(product.getProdName());
@@ -75,10 +69,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(Long id) {
-        Product product = productDAO.findById(id);
-        if (product == null){
-            throw new DAOException("Such product does not exist");
-        }
+        Product product = productDAO.findById(id).orElseThrow(() -> new DAOException("Such product does not exist"));
+
         productDAO.remove(product);
     }
 }

@@ -100,7 +100,7 @@
 
         <!-- Сообщения об ошибках -->
         <div class="col-md-9 well admin-content text-center" id="error">
-            <div th:if="${activeError} ne null">
+            <div th:if="${activeError} ne 0">
                 <h2 align="center" th:text="'You have ' + ${activeError} + ' messages from waiter'"></h2>
                 <a th:href="@{/admin/errors}" class="btn btn-primary">
                     <i class="glyphicon glyphicon-list"></i><br/>

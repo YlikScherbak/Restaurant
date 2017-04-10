@@ -2,10 +2,11 @@ package com.spring.dao;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public interface MyDAO<T, ID extends Serializable> extends Serializable {
 
-    T findById(ID id);
+    Optional<T> findById(ID id);
 
     T findReferenceById(ID id);
 
@@ -19,6 +20,6 @@ public interface MyDAO<T, ID extends Serializable> extends Serializable {
 
     void detach(T entity);
 
-    Long getCount();
+    Optional<Long> getCount();
 
 }

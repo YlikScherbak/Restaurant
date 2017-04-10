@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void saveUser(User user) {
-        if (userDAO.findUserByName(user.getUsername()) != null){
+        if (userDAO.findUserByName(user.getUsername()).isPresent()){
             throw new DAOException("Duplicate user name");
         }
         user.setAccountNonExpired(true);
@@ -56,7 +57,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        return userDAO.findUserByName(name);
+        return userDAO.findUserByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Override
@@ -71,13 +72,11 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void enableDisableWaiter(Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (id == 0){
-            throw new DAOException("The waiter with such id does not exist");
-        }else if(user.getId() == id){
+        if(Objects.equals(user.getId(), id)){
             throw new InsufficientPermissionsException("You cac not disable administrator");
         }
 
-        User waiter = userDAO.findById(id);
+        User waiter = userDAO.findById(id).orElseThrow(() -> new DAOException("The waiter with such id does not exist"));
         if (waiter.isEnabled()){
             waiter.setEnabled(false);
         }else {
@@ -88,13 +87,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly = true)
     public User findWaiterById(Long id) {
-        User waiter = userDAO.findById(id);
-
-        if (waiter == null){
-            throw new DAOException("Such waiter does not exist");
-        }
-
-        return waiter;
+        return userDAO.findById(id).orElseThrow(() -> new DAOException("Such waiter does not exist"));
     }
 
     @Override

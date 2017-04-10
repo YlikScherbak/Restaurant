@@ -30,15 +30,13 @@ public class WorkShiftServiceImpl implements WorkShiftService {
     @Override
     @Transactional(readOnly = true)
     public WorkShift getActiveWorkShift() {
-        if (workShiftDAO.getActiveWorkShift().isEmpty()) {
-            return null;
-        } else return workShiftDAO.getActiveWorkShift().get(0);
+        return workShiftDAO.getActiveWorkShift().orElse(null);
     }
 
     @Override
     @Transactional
     public void openNewWorkShift() {
-        if (!workShiftDAO.getActiveWorkShift().isEmpty()) {
+        if (workShiftDAO.getActiveWorkShift().isPresent()) {
             throw new InsufficientPermissionsException("Work shift is already open");
         }
 
@@ -53,7 +51,8 @@ public class WorkShiftServiceImpl implements WorkShiftService {
         if (orderDAO.checkActiveOrders()) {
             throw new InsufficientPermissionsException("You can not close the work shift, because there are not yet closed orders");
         }
-        WorkShift workShift = workShiftDAO.getActiveWorkShift().get(0);
+        WorkShift workShift = workShiftDAO.getActiveWorkShift().
+                orElseThrow(() -> new DAOException("Work shift does not open"));
         workShift.setActive(false);
         workShift.setClosedDate(new Date());
         return workShift.getId();
@@ -68,16 +67,15 @@ public class WorkShiftServiceImpl implements WorkShiftService {
     @Override
     @Transactional
     public Long countWorkShift() {
-        return workShiftDAO.getCount();
+        return workShiftDAO.getCount().orElse(0L);
     }
 
     @Override
     @Transactional
     public WorkShiftDTO getWorkShift(Long id) {
-        WorkShift workShift = workShiftDAO.findById(id);
-        if(workShift==null){
-            throw new DAOException("Such work shift does not exist");
-        }
+        WorkShift workShift = workShiftDAO.findById(id).
+                orElseThrow(() -> new DAOException("Such work shift does not exist"));
+
         return new WorkShiftDTO(workShift);
     }
 }

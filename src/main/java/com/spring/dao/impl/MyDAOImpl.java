@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 
 public class MyDAOImpl<T, ID extends Serializable> implements MyDAO<T, ID> {
@@ -21,8 +22,8 @@ public class MyDAOImpl<T, ID extends Serializable> implements MyDAO<T, ID> {
     }
 
     @Override
-    public T findById(ID id) {
-        return em.find(entity, id);
+    public Optional<T> findById(ID id) {
+        return Optional.of(em.find(entity, id));
     }
 
     @Override
@@ -58,10 +59,10 @@ public class MyDAOImpl<T, ID extends Serializable> implements MyDAO<T, ID> {
     }
 
     @Override
-    public Long getCount() {
+    public Optional<Long> getCount() {
         CriteriaQuery<Long> c =
                 em.getCriteriaBuilder().createQuery(Long.class);
         c.select(em.getCriteriaBuilder().count(c.from(entity)));
-        return em.createQuery(c).getSingleResult();
+        return Optional.of(em.createQuery(c).getSingleResult());
     }
 }

@@ -28,7 +28,7 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
     @Override
     @Transactional
     public void addMainCategory(MenuCategory menuCategory) {
-        if (!menuCategoryDAO.findByCategory(menuCategory.getCategory()).isEmpty()) {
+        if (menuCategoryDAO.findByCategory(menuCategory.getCategory()).isPresent()) {
             throw new DAOException("Duplicate main category name");
         }
         menuCategoryDAO.save(menuCategory);
@@ -43,20 +43,17 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
     @Override
     @Transactional(readOnly = true)
     public MenuCategory getById(Long id) {
-        MenuCategory menuCategory = menuCategoryDAO.findById(id);
-        if (menuCategory == null) {
-            throw new DAOException("Such category does not exist");
-        }
-        return menuCategory;
+        return menuCategoryDAO.findById(id).
+                orElseThrow(() -> new DAOException("Such category does not exist"));
     }
 
     @Override
     @Transactional
     public void edit(MenuCategory menuCategory, Long id) {
-        MenuCategory oldCategory = menuCategoryDAO.findById(id);
-        if (oldCategory == null) {
-            throw new DAOException("Such main category does not exist");
-        } else if (!menuCategoryDAO.findByCategory(menuCategory.getCategory()).isEmpty()) {
+        MenuCategory oldCategory = menuCategoryDAO.findById(id).
+                orElseThrow(() -> new DAOException("Such main category does not exist"));
+
+        if (menuCategoryDAO.findByCategory(menuCategory.getCategory()).isPresent()) {
             throw new DAOException("Duplicate main category name");
         }
         oldCategory.setCategory(menuCategory.getCategory());
@@ -65,11 +62,8 @@ public class MenuCategoryServiceImpl implements MenuCategoryService {
     @Override
     @Transactional
     public void delete(Long id) {
-        MenuCategory menuCategory = menuCategoryDAO.findById(id);
-
-        if (menuCategory == null) {
-            throw new DAOException("Such category does not exist");
-        }
+        MenuCategory menuCategory = menuCategoryDAO.findById(id).
+                orElseThrow(() -> new DAOException("Such category does not exist"));
 
         List<Subcategory> subcategories = menuCategory.getSubcategories();
         subcategories.forEach(subcategory -> subCategoryService.delete(subcategory.getId()));

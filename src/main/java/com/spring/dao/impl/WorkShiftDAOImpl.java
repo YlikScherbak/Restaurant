@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class WorkShiftDAOImpl extends MyDAOImpl<WorkShift, Long> implements WorkShiftDAO {
@@ -19,13 +20,13 @@ public class WorkShiftDAOImpl extends MyDAOImpl<WorkShift, Long> implements Work
     }
 
     @Override
-    public List<WorkShift> getActiveWorkShift() {
+    public Optional<WorkShift> getActiveWorkShift() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<WorkShift> criteria = cb.createQuery(WorkShift.class);
         Root<WorkShift> shift = criteria.from(WorkShift.class);
         criteria.select(shift).where(cb.equal(shift.get("active"), true));
         TypedQuery<WorkShift> query = em.createQuery(criteria);
-        return query.getResultList();
+        return Optional.of(query.getSingleResult());
     }
 
     @Override

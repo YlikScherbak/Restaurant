@@ -54,10 +54,9 @@ public class GeneralReportServiceImpl implements GeneralReportService {
     @Override
     @Transactional(readOnly = true)
     public GeneralReportDTO getGenReport(Long id) {
-        GeneralReport generalReport = generalReportDAO.findById(id);
-        if (generalReport == null) {
-            throw new DAOException("Such report does not exist");
-        }
+        GeneralReport generalReport = generalReportDAO.findById(id).
+                orElseThrow(() -> new DAOException("Such report does not exist"));
+
         return new GeneralReportDTO(generalReport.getId(), generalReport.getTotalAmount()
                 , generalReport.getDiscountAmount());
     }

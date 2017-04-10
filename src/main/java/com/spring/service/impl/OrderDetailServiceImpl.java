@@ -39,7 +39,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Transactional
     public String addOrderDetail(long id, String productName, Boolean compliment) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Order order = orderDAO.findById(id);
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such order does not exist"));
         Product product = productDAO.findProductByName(productName).
                 orElseThrow(() -> new DAOException("Such product does not exist"));
 
@@ -50,7 +50,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         OrderDetailsId orderDetailsId = new OrderDetailsId
                 ((compliment) ? product.getProdName() + " (compliment)" : product.getProdName(), order);
 
-        OrderDetail od = orderDetailsDAO.findById(orderDetailsId);
+        OrderDetail od = orderDetailsDAO.findById(orderDetailsId).orElse(null);
 
         if (od == null) {
             od = new OrderDetail(orderDetailsId, product.getSubcategory().getSubcategory(), 1);
@@ -80,10 +80,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Transactional
     public void deleteOrderDetail(Long id, String prodName) {
         Order order = orderDAO.findReferenceById(id);
-        OrderDetail orderDetail = orderDetailsDAO.findById(new OrderDetailsId(prodName, order));
-        if (orderDetail == null) {
-            throw new DAOException("Such product in order does not exist");
-        } else if (!order.isActive()) {
+        OrderDetail orderDetail = orderDetailsDAO.findById(new OrderDetailsId(prodName, order))
+                .orElseThrow(() -> new DAOException("Such product in order does not exist"));
+
+        if (!order.isActive()) {
             throw new InsufficientPermissionsException("You can't delete product from closed order");
         }
 
@@ -98,11 +98,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     @Override
     @Transactional(readOnly = true)
     public List<OrderDetailsAudition> getAudition(Long id) {
-        Order order = orderDAO.findById(id);
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such order does not exist"));
 
-        if (order == null) {
-            throw new DAOException("Such order does not exist");
-        }
         List<OrderDetailsAudition> dto = new ArrayList<>();
         orderDetailsDAO.getRevision(order).forEach(orderDetail -> dto.add(new OrderDetailsAudition(orderDetail)));
 

@@ -17,14 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.BigDecimal;
 
 @Service
 public class DiscountServiceImpl implements DiscountService {
 
-    final DiscountDAO discountDAO;
+    private final DiscountDAO discountDAO;
 
-    final OrderDAO orderDAO;
+    private final OrderDAO orderDAO;
 
     @Autowired
     public DiscountServiceImpl(DiscountDAO discountDAO, OrderDAO orderDAO) {
@@ -44,19 +43,14 @@ public class DiscountServiceImpl implements DiscountService {
     @Transactional
     public void setDiscountToOrder(Long id, String discountName) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Order order = orderDAO.findById(id);
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such an order does not exist"));
 
-        if (order == null) {
-            throw new DAOException("Such an order does not exist");
-        } else if (!order.getUser().getUsername().equals(user.getUsername())) {
+        if (!order.getUser().equals(user)) {
             throw new InsufficientPermissionsException("You can not add discount to foreign order.");
         }
 
-        Discount discount = discountDAO.findDiscountByName(discountName);
-
-        if (discount == null) {
-            throw new DAOException("Such an discount does not exist");
-        }
+        Discount discount = discountDAO.findDiscountByName(discountName).
+                orElseThrow(() -> new DAOException("Such an discount does not exist"));
 
         if(order.getDiscount() != null){
             order.setTotalAmount(order.getTotalAmount().add(order.getDiscountAmount()));
@@ -69,12 +63,10 @@ public class DiscountServiceImpl implements DiscountService {
     @Override
     @Transactional
     public void disableDiscount(Long id) {
-        Order order = orderDAO.findById(id);
+        Order order = orderDAO.findById(id).orElseThrow(() -> new DAOException("Such an order does not exist"));
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (order == null) {
-            throw new DAOException("Such an order does not exist");
-        } else if (!order.getUser().getUsername().equals(user.getUsername())) {
+        if (!order.getUser().equals(user)) {
             throw new InsufficientPermissionsException("You can disable discount in foreign order.");
         }
 

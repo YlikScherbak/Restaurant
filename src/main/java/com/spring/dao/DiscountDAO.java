@@ -2,7 +2,9 @@ package com.spring.dao;
 
 import com.spring.model.Discount;
 
+import java.util.Optional;
+
 public interface DiscountDAO extends MyDAO<Discount, Integer> {
 
-    Discount findDiscountByName(String name);
+    Optional<Discount> findDiscountByName(String name);
 }
